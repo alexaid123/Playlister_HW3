@@ -198,6 +198,14 @@ input {
   font-family: var(--font-primary);
 }
 
+.text-box
+{
+  float: right;
+  margin-right: 1%;
+  width: 60%;
+  margin-top: 0.5%
+}
+
 .modal.is-visible {
   visibility: visible;
   opacity: 1;

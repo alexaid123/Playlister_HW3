@@ -9,9 +9,18 @@ function SongCard(props) {
         let target = event.target;
         let targetId = target.id;
         targetId = targetId.substring(target.id.indexOf("-") + 1);
+        store.setSongDe(targetId);
         document.getElementById("delete-song-modal").classList.add("is-visible");
-        store.markSongForDeletion(targetId);
         //store.deleteSong(targetId);
+    }
+
+    function handleEditSong(event)
+    {
+        let target = event.target;
+        let targetId = target.id;
+        targetId = targetId.substring(target.id.indexOf("-") + 1);
+        document.getElementById("edit-song-modal").classList.add("is-visible");
+        store.setSongEdit(targetId);
     }
 
 
@@ -58,6 +67,7 @@ function SongCard(props) {
             key={index}
             id={'song-' + index + '-card'}
             className={cardClass}
+            onDoubleClick={handleEditSong}
             onDragStart={handleDragStart}
             onDragOver={handleDragOver}
             onDragEnter={handleDragEnter}
