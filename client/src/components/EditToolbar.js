@@ -12,6 +12,11 @@ function EditToolbar() {
     const history = useHistory();
 
     let enabledButtonClass = "playlister-button";
+    let disabledButtonClass = "playlister-button-disabled";
+    //store.disableButton('add-song-button');
+    //store.disableButton("undo-button");
+    //store.disableButton("redo-button");
+   // store.disableButton("close-button");
 
     function handleUndo() {
         store.undo();

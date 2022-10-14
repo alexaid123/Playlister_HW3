@@ -259,6 +259,19 @@ export const useGlobalStore = () => {
     // DRIVE THE STATE OF THE APPLICATION. WE'LL CALL THESE IN 
     // RESPONSE TO EVENTS INSIDE OUR COMPONENTS.
 
+    store.disableButton = function (id) {
+        let button = document.getElementById(id);
+        button.className = "playlister-button-disabled";
+        button.disabled = true;
+    }
+
+   store.enableButton = function (id) {
+        let button = document.getElementById(id);
+        button.classList.remove("disabled");
+        button.disabled = false;
+    }
+
+
     // THIS FUNCTION PROCESSES CHANGING A LIST NAME
     store.changeListName = function (id, newName) {
         // GET THE LIST 

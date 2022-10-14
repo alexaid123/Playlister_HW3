@@ -118,18 +118,9 @@ body {
 
 #add-list-button {
   float:left;
-  justify-content: left;
-  align-items: left;
-  margin-top: 0.5%;
 }
 
-#add-song-button, #undo-button, #close-button, #redo-button {
-  
-  justify-content: right;
-  align-items: right;
-  padding:6px;
-  margin-top:0%;
-}
+
 
 .list-card, .selected-list-card, .unselected-list-card {
   font-size: 18pt;
@@ -168,15 +159,6 @@ body {
 input {
   font-size:20pt;
 }
-
-.disabled {
-  background-color: lightgray;
-}
-
-.disabled:hover {
-  color: var(--swatch-neutral);
-}
-
 /* THIS STYLE SHEET MANAGES STYLE FOR OUR MODAL, i.e. DIALOG BOX */
 
 .modal {
