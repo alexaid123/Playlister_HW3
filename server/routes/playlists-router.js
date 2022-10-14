@@ -9,8 +9,10 @@ const PlaylistController = require('../controllers/playlist-controller')
 const router = express.Router()
 
 router.post('/playlist', PlaylistController.createPlaylist)
-//router.put('/playlist', PlaylistController.updatePlaylistById)
+router.put('/playlist/:id', PlaylistController.updateSongsById) 
+router.put('/playlist/:id', PlaylistController.updatePlaylistById)
 router.get('/playlist/:id', PlaylistController.getPlaylistById)
+router.delete('/playlist/:id', PlaylistController.deletePlaylistById)
 router.get('/playlists', PlaylistController.getPlaylists)
 router.get('/playlistpairs', PlaylistController.getPlaylistPairs)
 

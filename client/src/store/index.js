@@ -1,6 +1,6 @@
 import { createContext, useState } from 'react'
 import jsTPS from '../common/jsTPS'
-import api from '../api'
+import api, { updatePlaylistById,  updateSongsById} from '../api'
 export const GlobalStoreContext = createContext({});
 /*
     This is our global data store. Note that it uses the Flux design pattern,
@@ -15,9 +15,11 @@ export const GlobalStoreActionType = {
     CHANGE_LIST_NAME: "CHANGE_LIST_NAME",
     CLOSE_CURRENT_LIST: "CLOSE_CURRENT_LIST",
     CREATE_NEW_LIST: "CREATE_NEW_LIST",
+    CREATE_NEW_SONG: "CREATE_NEW_SONG",
     LOAD_ID_NAME_PAIRS: "LOAD_ID_NAME_PAIRS",
     SET_CURRENT_LIST: "SET_CURRENT_LIST",
     SET_LIST_NAME_EDIT_ACTIVE: "SET_LIST_NAME_EDIT_ACTIVE",
+    HANDLE_DRAG: "HANDLE_DRAG",
 }
 
 // WE'LL NEED THIS TO PROCESS TRANSACTIONS
@@ -31,7 +33,10 @@ export const useGlobalStore = () => {
         idNamePairs: [],
         currentList: null,
         newListCounter: 0,
-        listNameActive: false
+        listNameActive: false,
+        listDeleteActive: false,
+        isDragging: false,
+        draggedTo: false
     });
 
     // HERE'S THE DATA STORE'S REDUCER, IT MUST
@@ -45,7 +50,9 @@ export const useGlobalStore = () => {
                     idNamePairs: payload.idNamePairs,
                     currentList: payload.playlist,
                     newListCounter: store.newListCounter,
-                    listNameActive: false
+                    listNameActive: false,
+                    isDragging: store.isDragging,
+                    draggedTo: store.draggedTo
                 });
             }
             // STOP EDITING THE CURRENT LIST
@@ -54,7 +61,9 @@ export const useGlobalStore = () => {
                     idNamePairs: store.idNamePairs,
                     currentList: null,
                     newListCounter: store.newListCounter,
-                    listNameActive: false
+                    listNameActive: false,
+                    isDragging: store.isDragging,
+                    draggedTo: store.draggedTo
                 })
             }
             // CREATE A NEW LIST
@@ -63,7 +72,20 @@ export const useGlobalStore = () => {
                     idNamePairs: store.idNamePairs,
                     currentList: payload,
                     newListCounter: store.newListCounter + 1,
-                    listNameActive: false
+                    listNameActive: false,
+                    isDragging: store.isDragging,
+                    draggedTo: store.draggedTo
+                })
+            }
+            // CREATE A NEW Song
+            case GlobalStoreActionType.CREATE_NEW_SONG: {
+                return setStore({
+                    idNamePairs: store.idNamePairs,
+                    currentList: payload,
+                    newListCounter: store.newListCounter,
+                    listNameActive: false,
+                    isDragging: store.isDragging,
+                    draggedTo: store.draggedTo
                 })
             }
             // GET ALL THE LISTS SO WE CAN PRESENT THEM
@@ -72,7 +94,9 @@ export const useGlobalStore = () => {
                     idNamePairs: payload,
                     currentList: null,
                     newListCounter: store.newListCounter,
-                    listNameActive: false
+                    listNameActive: false,
+                    isDragging: store.isDragging,
+                    draggedTo: store.draggedTo
                 });
             }
             // PREPARE TO DELETE A LIST
@@ -81,7 +105,9 @@ export const useGlobalStore = () => {
                     idNamePairs: store.idNamePairs,
                     currentList: null,
                     newListCounter: store.newListCounter,
-                    listNameActive: false
+                    listNameActive: false,
+                    isDragging: store.isDragging,
+                    draggedTo: store.draggedTo
                 });
             }
             // UPDATE A LIST
@@ -90,7 +116,9 @@ export const useGlobalStore = () => {
                     idNamePairs: store.idNamePairs,
                     currentList: payload,
                     newListCounter: store.newListCounter,
-                    listNameActive: false
+                    listNameActive: false,
+                    isDragging: store.isDragging,
+                    draggedTo: store.draggedTo
                 });
             }
             // START EDITING A LIST NAME
@@ -99,9 +127,38 @@ export const useGlobalStore = () => {
                     idNamePairs: store.idNamePairs,
                     currentList: payload,
                     newListCounter: store.newListCounter,
-                    listNameActive: true
+                    listNameActive: true,
+                    isDragging: store.isDragging,
+                    draggedTo: store.draggedTo
                 });
             }
+
+            // START DELETE LIST MODAL
+            case GlobalStoreActionType.SET_LIST_DELETE_ACTIVE: {
+                return setStore({
+                    idNamePairs: store.idNamePairs,
+                    currentList: payload,
+                    newListCounter: store.newListCounter,
+                    listNameActive: true,
+                    listDeleteActive: true,
+                    isDragging: store.isDragging,
+                    draggedTo: store.draggedTo
+                });
+            }
+
+            // DRAG START
+            case GlobalStoreActionType.HANDLE_DRAG: {
+                return setStore({
+                    idNamePairs: store.idNamePairs,
+                    currentList: store.currentList,
+                    newListCounter: store.newListCounter,
+                    listNameActive: store.currentList,
+                    listDeleteActive: store.currentList,
+                    isDragging: payload.isDragging,
+                    draggedTo: payload.draggedTo
+                });
+            }
+
             default:
                 return store;
         }
@@ -113,13 +170,14 @@ export const useGlobalStore = () => {
     // THIS FUNCTION PROCESSES CHANGING A LIST NAME
     store.changeListName = function (id, newName) {
         // GET THE LIST 
-        async function asyncChangeListName(id) {
+        async function asyncChangeListName(id, newName) {
             let response = await api.getPlaylistById(id); 
             if (response.data.success) {
                 let playlist = response.data.playlist;
                 playlist.name = newName;
                 async function updateList(playlist) {
-                   response = await api.updatePlaylistById(playlist._id, playlist);
+                    let par = {list: playlist, change: true}
+                   response = await api.updateSongsById(playlist._id, par);
                     if (response.data.success) {
                         async function getListPairs(playlist) {
                             response = await api.getPlaylistPairs();
@@ -142,8 +200,85 @@ export const useGlobalStore = () => {
                 updateList(playlist);
             }
         }
-        asyncChangeListName(id);
+        asyncChangeListName(id, newName);
     }
+
+    store.handleMove = function (first, second)
+    {
+        storeReducer({
+            type: GlobalStoreActionType.HANDLE_DRAG,
+            payload: {
+                isDragging: first,
+                draggedTo: second
+            }
+        });
+    }
+
+    store.moveCallback = function (start, end)
+    {
+        start = start.substring(0,1);
+        end = end.substring(0,1);
+        console.log("This is start " + start);
+        console.log("This is end " + end);
+        async function asyncMoveSong(start, end) {
+            let response = await api.getPlaylistById(store.currentList._id); 
+            if (response.data.success) {
+               
+                let list = response.data.playlist;
+                
+                // WE NEED TO UPDATE THE STATE FOR THE APP
+               list.songs.splice(end, 0, list.songs.splice(start, 1)[0]);
+                console.log(list);
+                async function updateSong(list) {
+                    let par = {list: list, change: false}
+                   response = await api.updateSongsById(list._id, par);
+                    if (response.data.success) {
+                        async function getListPairs(list) {
+                            response = await api.getPlaylistPairs();
+                            if (response.data.success) {
+                                let pairsArray = response.data.idNamePairs;
+                                storeReducer({
+                                    type: GlobalStoreActionType.CREATE_NEW_SONG,
+                                    payload: list
+                                });
+                            }
+                        }
+                        getListPairs(list);
+                    }
+                }
+                updateSong(list);
+            }
+        }
+        asyncMoveSong(start, end);
+    }
+
+
+    store.deletePlaylist = function (id) {
+        async function asyncDeleteList(id) {
+            let response = await api.deletePlaylistById(id);
+            console.log(id);
+            if (response.data.success)
+            {
+                async function asyncGetPlaylistPairs()
+                {
+                    let response = await api.getPlaylistPairs();
+                    if (response.data.success) {
+                    let playlist = response.data.playlist;
+                    if (response.data.success) {
+                        storeReducer({
+                            type: GlobalStoreActionType.MARK_LIST_FOR_DELETION,
+                            payload: playlist
+                        });
+                        store.loadIdNamePairs();
+                    }
+                }
+                }
+                asyncGetPlaylistPairs();
+            }
+        }
+        asyncDeleteList(id);
+    }
+
 
     // THIS FUNCTION PROCESSES CLOSING THE CURRENTLY LOADED LIST
     store.closeCurrentList = function () {
@@ -156,6 +291,13 @@ export const useGlobalStore = () => {
     store.setIsListNameEditActive = function () {
         storeReducer({
             type: GlobalStoreActionType.SET_LIST_NAME_EDIT_ACTIVE,
+            payload: {}
+        });
+    }
+
+    store.setIsListDeleteActive = function () {
+        storeReducer({
+            type: GlobalStoreActionType.SET_LIST_DELETE_ACTIVE,
             payload: {}
         });
     }
@@ -196,9 +338,8 @@ export const useGlobalStore = () => {
                         });
                         store.loadIdNamePairs();
                         let num = store.idNamePairs.length;
-                        console.log(num);
                         store.newListCounter = num;
-                        console.log(store.newListCounter);
+                        console.log(response.data.idNamePairs[store.newListCounter]._id);
                         store.setCurrentList(response.data.idNamePairs[store.newListCounter]._id);
                     }
                 }
@@ -209,6 +350,72 @@ export const useGlobalStore = () => {
         }
         asyncCreateNewList();
     }
+
+    store.createNewSong = function () 
+    {
+        async function asyncCreateNewSong() {
+            console.log(store.currentList.songs.length);
+            let response = await api.getPlaylistById(store.currentList._id); 
+            if (response.data.success) {
+                let playlist = response.data.playlist;
+                let song = {title: playlist.songs.length, artist: "Unknown", youTubeId: "90M60PzmxEE"};
+                playlist.songs.push(song);
+                async function updateSong(playlist) {
+                    let par = {list: playlist, change: false}
+                   response = await api.updateSongsById(playlist._id, par);
+                    if (response.data.success) {
+                        async function getListPairs(playlist) {
+                            response = await api.getPlaylistPairs();
+                            if (response.data.success) {
+                                let pairsArray = response.data.idNamePairs;
+                                storeReducer({
+                                    type: GlobalStoreActionType.CREATE_NEW_SONG,
+                                    payload: playlist
+                                });
+                            }
+                        }
+                        getListPairs(playlist);
+                    }
+                }
+                updateSong(playlist);
+            }
+        }
+        asyncCreateNewSong();
+     }
+
+
+     store.deleteSong = function (index) 
+    {
+        async function asyncDeleteSong(index) {
+            let response = await api.getPlaylistById(store.currentList._id); 
+            if (response.data.success) {
+                let playlist = response.data.playlist;
+                console.log("Deleted this index -> " + index);
+                console.log(playlist.songs);
+                playlist.songs.splice(index, 1);
+                
+                async function updateSongD(playlist) {
+                    let par = {list: playlist, change: false}
+                   response = await api.updateSongsById(playlist._id, par);
+                    if (response.data.success) {
+                        async function getListPairs(playlist) {
+                            response = await api.getPlaylistPairs();
+                            if (response.data.success) {
+                                let pairsArray = response.data.idNamePairs;
+                                storeReducer({
+                                    type: GlobalStoreActionType.CREATE_NEW_SONG,
+                                    payload: playlist
+                                });
+                            }
+                        }
+                        getListPairs(playlist);
+                    }
+                }
+                updateSongD(playlist);
+            }
+        }
+        asyncDeleteSong(index);
+     }
 
     store.setCurrentList = function (id) {
         async function asyncSetCurrentList(id) {

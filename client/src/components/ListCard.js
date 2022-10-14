@@ -1,6 +1,7 @@
 import { useContext, useState } from 'react'
 import { useHistory } from 'react-router-dom'
 import { GlobalStoreContext } from '../store'
+
 // import { DeleteListModal } from 'Playlister_HW3\client\src\components\DeleteListModal.js'
 
 /*
@@ -13,6 +14,7 @@ import { GlobalStoreContext } from '../store'
 function ListCard(props) {
     const { store } = useContext(GlobalStoreContext);
     const [ editActive, setEditActive ] = useState(false);
+    const [ deleteActive, setDeleteActive ] = useState(false);
     const [ text, setText ] = useState("");
     store.history = useHistory();
     const { idNamePair, selected } = props;
@@ -38,17 +40,40 @@ function ListCard(props) {
         if (newActive) {
             store.setIsListNameEditActive();
         }
-        setEditActive(newActive); 
+        setEditActive(newActive);  
     }
 
-    function handleDeleteList()
-    {}
+
+    function toggleDelete(event)
+    {
+        event.stopPropagation();
+        let newActive = !deleteActive;
+        if (newActive) {
+            store.setIsListDeleteActive();
+        }
+        setDeleteActive(newActive);  
+        let id = event.target.id.substring("list-".length);
+        id = id.substring(7, id.length);
+        handleDeleteList(id);
+    }
+
+    function handleDeleteList(id)
+    {
+        store.deletePlaylist(id);
+    }
 
     function handleKeyPress(event) {
         if (event.code === "Enter") {
             let id = event.target.id.substring("list-".length);
-            store.changeListName(id, text);
-            toggleEdit();
+            if(text == "")
+            {
+                toggleEdit();
+            }
+            else
+            {
+                store.changeListName(id, text);
+                toggleEdit();
+            }
         }
     }
     function handleUpdateText(event) {
@@ -80,7 +105,7 @@ function ListCard(props) {
                 type="button"
                 id={"delete-list-" + idNamePair._id}
                 className="list-card-button"
-                onClick={handleDeleteList}
+                onClick={toggleDelete}
                 value={"\u2715"}
             />
             <input

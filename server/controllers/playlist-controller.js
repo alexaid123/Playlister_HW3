@@ -1,5 +1,5 @@
-const { updatePlaylistById } = require('../../client/src/api');
 const Playlist = require('../models/playlist-model')
+const mongodb = require('mongodb')
 /*
     This is our back-end API. It provides all the data services
     our database needs. Note that this file contains the controller
@@ -50,6 +50,49 @@ getPlaylistById = async (req, res) => {
     }).catch(err => console.log(err))
 }
 
+deletePlaylistById = async(req, res) => {
+    await Playlist.deleteOne({ _id: req.params.id }, (err, playlists) => {
+        if (err) {
+           return res.status(400).json({ success: false, error: err })
+        }
+
+        return res.status(200).json({ success: true, data: playlists })
+    }).catch(err => console.log(err))
+}
+
+updatePlaylistById = async (req, res) => {
+    await Playlist.findOneAndUpdate({ _id: req.params.id }, {name: req.body.name}, (err) => {
+        if (err) {
+            return res.status(400).json({ success: false, error: err })
+        }
+        
+        return res.status(200).json({ success: true})
+    }).catch(err => console.log(err))
+}
+
+updateSongsById = async (req, res) => {
+    if(req.body.change)
+    {
+        await Playlist.findOneAndUpdate({ _id: req.params.id }, {name: req.body.list.name}, (err) => {
+            if (err) {
+                return res.status(400).json({ success: false, error: err })
+            }
+            
+            return res.status(200).json({ success: true})
+        }).catch(err => console.log(err))
+    }
+    else
+    {
+    await Playlist.findOneAndUpdate({ _id: req.params.id }, {songs: req.body.list.songs}, (err) => {
+        if (err) {
+            return res.status(400).json({ success: false, error: err })
+        }
+        
+        return res.status(200).json({ success: true})
+    }).catch(err => console.log(err))
+}
+}
+
 getPlaylists = async (req, res) => {
     await Playlist.find({}, (err, playlists) => {
         if (err) {
@@ -68,11 +111,11 @@ getPlaylistPairs = async (req, res) => {
         if (err) {
             return res.status(400).json({ success: false, error: err})
         }
-        if (!playlists.length) {
+        /*if (!playlists.length) {
             return res
                 .status(404)
                 .json({ success: false, error: 'Playlists not found'})
-        }
+        }*/
         else {
             // PUT ALL THE LISTS INTO ID, NAME PAIRS
             let pairs = [];
@@ -93,5 +136,8 @@ module.exports = {
     createPlaylist,
     getPlaylists,
     getPlaylistPairs,
+    updatePlaylistById,
     getPlaylistById,
+    deletePlaylistById,
+    updateSongsById
 }

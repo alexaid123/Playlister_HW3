@@ -123,6 +123,14 @@ body {
   margin-top: 0.5%;
 }
 
+#add-song-button, #undo-button, #close-button, #redo-button {
+  
+  justify-content: right;
+  align-items: right;
+  padding:6px;
+  margin-top:0%;
+}
+
 .list-card, .selected-list-card, .unselected-list-card {
   font-size: 18pt;
   margin: 10px;
