@@ -9,7 +9,9 @@ function SongCard(props) {
         let target = event.target;
         let targetId = target.id;
         targetId = targetId.substring(target.id.indexOf("-") + 1);
-        store.deleteSong(targetId);
+        document.getElementById("delete-song-modal").classList.add("is-visible");
+        store.markSongForDeletion(targetId);
+        //store.deleteSong(targetId);
     }
 
 

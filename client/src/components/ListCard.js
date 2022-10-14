@@ -47,14 +47,15 @@ function ListCard(props) {
     function toggleDelete(event)
     {
         event.stopPropagation();
+        document.getElementById("delete-list-modal").classList.add("is-visible");
         let newActive = !deleteActive;
-        if (newActive) {
-            store.setIsListDeleteActive();
-        }
-        setDeleteActive(newActive);  
         let id = event.target.id.substring("list-".length);
         id = id.substring(7, id.length);
-        handleDeleteList(id);
+        if (newActive) {
+           store.setIsListDeleteActive(id);
+        }
+        //setDeleteActive(newActive);  
+       // handleDeleteList(id);
     }
 
     function handleDeleteList(id)
