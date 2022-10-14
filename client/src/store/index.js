@@ -390,6 +390,8 @@ export const useGlobalStore = () => {
             let response = await api.getPlaylistById(store.currentList._id); 
             if (response.data.success) {
                 let playlist = response.data.playlist;
+                
+                index = index.substring(5);
                 console.log("Deleted this index -> " + index);
                 console.log(playlist.songs);
                 playlist.songs.splice(index, 1);
