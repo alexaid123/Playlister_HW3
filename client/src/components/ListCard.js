@@ -27,6 +27,8 @@ function ListCard(props) {
 
             // CHANGE THE CURRENT LIST
             store.setCurrentList(_id);
+            store.enableButton('add-song-button');
+            store.enableButton('close-button');   
         }
     }
 

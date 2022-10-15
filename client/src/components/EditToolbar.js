@@ -25,13 +25,17 @@ function EditToolbar() {
         store.redo();
     }
     function handleClose() {
+        store.disableButton('add-song-button');
+        store.disableButton('close-button');
+        store.disableButton('undo-button');
+        store.disableButton('redo-button');
+
         history.push("/");
         store.closeCurrentList();
-    }
+    } 
     function handleAddSong()
     {
-        store.addAddSongTransaction();
-      // store.createNewSong();
+            store.addAddSongTransaction();
     }
     let editStatus = false;
     if (store.isListNameEditActive) {
@@ -44,7 +48,7 @@ function EditToolbar() {
                 id='add-song-button'
                 disabled={editStatus}
                 value="+"
-                className={enabledButtonClass}
+                className={disabledButtonClass}
                 onClick={handleAddSong}
             />
             <input
@@ -52,7 +56,7 @@ function EditToolbar() {
                 id='undo-button'
                 disabled={editStatus}
                 value="⟲"
-                className={enabledButtonClass}
+                className={disabledButtonClass}
                 onClick={handleUndo}
             />
             <input
@@ -60,7 +64,7 @@ function EditToolbar() {
                 id='redo-button'
                 disabled={editStatus}
                 value="⟳"
-                className={enabledButtonClass}
+                className={disabledButtonClass}
                 onClick={handleRedo}
             />
             <input
@@ -68,7 +72,7 @@ function EditToolbar() {
                 id='close-button'
                 disabled={editStatus}
                 value="&#x2715;"
-                className={enabledButtonClass}
+                className={disabledButtonClass}
                 onClick={handleClose}
             />
         </span>);

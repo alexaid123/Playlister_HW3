@@ -10,12 +10,19 @@ function SongCard(props) {
         let targetId = target.id;
         targetId = targetId.substring(target.id.indexOf("-") + 1);
         store.setSongDe(targetId);
+        store.disableButton('add-song-button');
+        store.disableButton('close-button');
+        store.disableButton('undo-button');
+        store.disableButton('redo-button');
         document.getElementById("delete-song-modal").classList.add("is-visible");
-        //store.deleteSong(targetId);
     }
 
     function handleEditSong(event)
     {
+        store.disableButton('add-song-button');
+        store.disableButton('close-button');
+        store.disableButton('undo-button');
+        store.disableButton('redo-button');
         let target = event.target;
         let targetId = target.id;
         targetId = targetId.substring(target.id.indexOf("-") + 1);

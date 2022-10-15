@@ -86,7 +86,6 @@ body {
   float:left;
   color: black;
   cursor: pointer;
-  opacity: 100%;
 }
 
 .playlister-button:hover {

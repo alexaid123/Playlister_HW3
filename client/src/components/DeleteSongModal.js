@@ -28,13 +28,35 @@ function DeleteSongModal()
     function cancelD()
     {
         document.getElementById("delete-song-modal").classList.remove("is-visible");
+        store.enableButton('add-song-button');
+        store.enableButton('close-button');
+
+        if(store.canUndo())
+        {
+            store.enableButton('undo-button');
+        }
+        if(store.canRedo())
+        {
+            store.enableButton('redo-button');
+        }
     }
 
     function confirmD()
     {
         document.getElementById("delete-song-modal").classList.remove("is-visible");
         store.addDeleteSongTransaction(store.deleteSongid);
-        //store.deleteSong(store.deleteSongid);
+        store.enableButton('add-song-button');
+        store.enableButton('add-song-button');
+        store.enableButton('close-button');
+
+        if(store.canUndo())
+        {
+            store.enableButton('undo-button');
+        }
+        if(store.canRedo())
+        {
+            store.enableButton('redo-button');
+        }
     }
         return (
             <div 

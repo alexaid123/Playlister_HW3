@@ -303,26 +303,75 @@ export const useGlobalStore = () => {
     store.undo = function () {
         if (tps.hasTransactionToUndo()) {
             tps.undoTransaction();
-            //this.view.updateToolbarButtons(this);
+            if(store.canUndo())
+            {
+                store.enableButton('undo-button');
+            }
+            else
+            {
+                store.disableButton('undo-button');
+            }
+            if(store.canRedo())
+            {
+                store.enableButton('redo-button');
+            }
+            else
+            {
+                store.disableButton('redo-button');
+            }
         }
+    }
+
+    store.canUndo = function () {
+        if (tps.hasTransactionToUndo()) {
+           return true;
+        }
+        return false;
+    }
+
+    store.canRedo = function () {
+        if (tps.hasTransactionToRedo()) {
+           return true;
+        }
+        return false;
     }
 
     store.redo = function () {
         if (tps.hasTransactionToRedo()) {
             tps.doTransaction();
-            //this.view.updateToolbarButtons(this);
+            if(store.canUndo())
+            {
+                store.enableButton('undo-button');
+            }
+            else
+            {
+                store.disableButton('undo-button');
+            }
+            if(store.canRedo())
+            {
+                store.enableButton('redo-button');
+            }
+            else
+            {
+                store.disableButton('redo-button');
+            }
         }
     }
 
     store.addAddSongTransaction = function() {
-        let transaction = new AddSong_Transaction(store);
-        tps.addTransaction(transaction);
+        if(store.currentList != null)
+        {
+            let transaction = new AddSong_Transaction(store);
+            tps.addTransaction(transaction);
+            store.enableButton('undo-button');
+        }
     }
 
     store.addDeleteSongTransaction = function(index) {
         let song = store.currentList.songs[index];
         let transaction = new DeleteSong_Transaction(store, index, song);
         tps.addTransaction(transaction);
+        store.enableButton('undo-button');
     }
 
     store.addEditSongTransaction = function() {
@@ -333,12 +382,14 @@ export const useGlobalStore = () => {
         let son = {title: title, artist: artist, youTubeId: yID };
         let transaction = new EditSong_Transaction(store, store.editSongId, store.editSongPrevTitle, store.editSongPrevArtist, store.editSongPrevYId, son);
         tps.addTransaction(transaction);
+        store.enableButton('undo-button');
     }
 
     store.addMoveSongTransaction = function (start, end)
     {
         let transaction = new MoveSong_Transaction(store, start, end);
         tps.addTransaction(transaction);
+        store.enableButton('undo-button');
     }
 
 
@@ -346,11 +397,13 @@ export const useGlobalStore = () => {
     store.disableButton = function (id) {
         let button = document.getElementById(id);
         button.className = "playlister-button-disabled";
+        button.classList.add("disabled");
         button.disabled = true;
     }
 
    store.enableButton = function (id) {
         let button = document.getElementById(id);
+        button.className = "playlister-button";
         button.classList.remove("disabled");
         button.disabled = false;
     }
@@ -630,8 +683,7 @@ export const useGlobalStore = () => {
             let response = await api.getPlaylistById(store.currentList._id); 
             if (response.data.success) {
                 let playlist = response.data.playlist;
-                store.newListCounter += 1;
-                let song = {title: store.newListCounter, artist: "Unknown", youTubeId: "dQw4w9WgXcQ"};
+                let song = {title: "Untitled", artist: "Unknown", youTubeId: "dQw4w9WgXcQ"};
                 playlist.songs.push(song);
                 async function updateSong(playlist) {
                     let par = {list: playlist, change: false}

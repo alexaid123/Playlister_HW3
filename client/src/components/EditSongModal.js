@@ -14,12 +14,34 @@ function EditSongModal()
 
     function confirmE ()
     {
+        store.enableButton('add-song-button');
+        store.enableButton('close-button');
+
+        if(store.canUndo())
+        {
+            store.enableButton('undo-button');
+        }
+        if(store.canRedo())
+        {
+            store.enableButton('redo-button');
+        }
         store.addEditSongTransaction();
         document.getElementById("edit-song-modal").classList.remove("is-visible");
     }
 
     function cancelE ()
     {
+        store.enableButton('add-song-button');
+        store.enableButton('close-button');
+
+        if(store.canUndo())
+        {
+            store.enableButton('undo-button');
+        }
+        if(store.canRedo())
+        {
+            store.enableButton('redo-button');
+        }
         document.getElementById("edit-song-modal").classList.remove("is-visible");
     }
       
