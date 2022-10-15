@@ -10,7 +10,7 @@ export default class EditSong_Transaction extends jsTPS_Transaction {
     }
 
     doTransaction() {
-       console.log(this.curSong);
+       this.store.disableButton('redo-button');
        this.store.editSong(this.index, this.curSong);
     }
     

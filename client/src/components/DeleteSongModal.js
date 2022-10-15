@@ -8,23 +8,6 @@ function DeleteSongModal()
     const { store } = useContext(GlobalStoreContext);
     store.history = useHistory();
    
-    
-    
-    /*let index = 0;
-    if(store.currentList != null)
-    {
-        
-        for(let i = 0; i < store.currentList.songs.length; i++)
-        {
-            if(store.currentList.songs[i].title == store.deleteSongName)
-            {
-                index = i;
-                break;
-            }
-        }
-        console.log("ARHIGOS " + index);
-    }*/
-
     function cancelD()
     {
         document.getElementById("delete-song-modal").classList.remove("is-visible");

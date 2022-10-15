@@ -125,7 +125,7 @@ export const useGlobalStore = () => {
                 return setStore({
                     idNamePairs: store.idNamePairs,
                     currentList: payload,
-                    newListCounter: store.newListCounter,
+                    newListCounter: store.newListCounter + 1,
                     listNameActive: false,
                     isDragging: store.isDragging,
                     draggedTo: store.draggedTo,
@@ -375,7 +375,6 @@ export const useGlobalStore = () => {
     }
 
     store.addEditSongTransaction = function() {
-        console.log(store.editSongCur);
         let title = document.getElementById("edit-song-title").value;
         let artist = document.getElementById("edit-song-artist").value;
         let yID = document.getElementById("edit-song-ytid").value;
@@ -571,21 +570,27 @@ export const useGlobalStore = () => {
             {
                 async function asyncGetPlaylistPairs()
                 {
-                    let response = await api.getPlaylistPairs();
-                    if (response.data.success) {
-                    let playlist = response.data.playlist;
-                    if (response.data.success) {
-                        storeReducer({
-                            type: GlobalStoreActionType.CREATE_NEW_LIST,
-                            payload: playlist
-                        });
-                        store.loadIdNamePairs();
-                        let num = store.idNamePairs.length;
-                        store.newListCounter = num;
-                        store.setCurrentList(response.data.idNamePairs[store.newListCounter]._id);
+                    async function asyncGetPlaylistPairs()
+                    {
+                        let response = await api.getPlaylistPairs();
+                        if (response.data.success) {
+                        let playlist = response.data.playlist;
+                        if (response.data.success) {
+                            storeReducer({
+                                type: GlobalStoreActionType.CREATE_NEW_LIST,
+                                payload: playlist
+                            });
+                            store.loadIdNamePairs();
+                            let num = store.idNamePairs.length;
+                            store.newListCounter = num;
+                            store.setCurrentList(response.data.idNamePairs[store.newListCounter]._id);
+                        }
+                        }
                     }
+                asyncGetPlaylistPairs();
+                   
                 }
-                }
+                
                 asyncGetPlaylistPairs();
             }
             
@@ -597,7 +602,6 @@ export const useGlobalStore = () => {
     store.setSongEdit = function (index)
     {
         index = index.substring(0,1);
-        console.log(index);
         let songs = store.currentList.songs;
         let title = songs[index].title;
         let artist = songs[index].artist;
@@ -712,7 +716,6 @@ export const useGlobalStore = () => {
      store.setSongDe = function (index) 
     {
             index = index.substring(5);
-            console.log(index);
             let pame = index;
             
             storeReducer({
@@ -829,11 +832,14 @@ export const useGlobalStore = () => {
                         payload: playlist
                     });
                     store.history.push("/playlist/" + playlist._id);
+                    store.enableButton('add-song-button');
+                    store.enableButton('close-button');
                 }
             }
         }
         asyncSetCurrentList(id);
     }
+
     store.getPlaylistSize = function() {
         return store.currentList.songs.length;
     }

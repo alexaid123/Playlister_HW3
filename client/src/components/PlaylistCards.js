@@ -11,7 +11,6 @@ import { GlobalStoreContext } from '../store'
 function PlaylistCards() {
     const { store } = useContext(GlobalStoreContext);
     store.history = useHistory();
-    
     function renderSongs()
     {
         if(store.currentList !== null)

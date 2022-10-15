@@ -9,7 +9,7 @@ export default class MoveSong_Transaction extends jsTPS_Transaction {
     }
 
     doTransaction() {
-        console.log("inhere butrch");
+        this.store.disableButton('redo-button');
         this.store.moveCallback(this.startI, this.endI);
     }
     

@@ -9,7 +9,7 @@ export default class DeleteSong_Transaction extends jsTPS_Transaction {
     }
 
     doTransaction() {
-        console.log("inhere butrch");
+       this.store.disableButton('redo-button');
        this.store.deleteSong(this.index);
     }
     

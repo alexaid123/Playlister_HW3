@@ -7,7 +7,7 @@ export default class AddSong_Transaction extends jsTPS_Transaction {
     }
 
     doTransaction() {
-       console.log("DOne");
+        this.store.disableButton('redo-button');
         this.store.createNewSong();
     }
     
