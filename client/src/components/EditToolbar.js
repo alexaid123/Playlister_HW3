@@ -30,7 +30,8 @@ function EditToolbar() {
     }
     function handleAddSong()
     {
-       store.createNewSong();
+        store.addAddSongTransaction();
+      // store.createNewSong();
     }
     let editStatus = false;
     if (store.isListNameEditActive) {

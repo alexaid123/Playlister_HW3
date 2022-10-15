@@ -8,6 +8,10 @@ import PlaylistCards from './PlaylistCards'
 import DeleteListModal from './DeleteListModal'
 import DeleteSongModal from './DeleteSongModal'
 import EditSongModal from './EditSongModal'
+import AddSong_Transaction from "./AddSong_Transaction";
+import EditSong_Transaction from "./EditSong_Transaction";
+import DeleteSong_Transaction from "./DeleteSong_Transaction";
+import MoveSong_Transaction from "./MoveSong_Transaction";
 /*
     This serves as a module so that we can import
     all the other components as we wish.
@@ -23,5 +27,9 @@ export {    Banner,
             PlaylistCards,
             DeleteListModal,
             DeleteSongModal,
-            EditSongModal
+            EditSongModal,
+            AddSong_Transaction,
+            EditSong_Transaction,
+            DeleteSong_Transaction,
+            MoveSong_Transaction
          }

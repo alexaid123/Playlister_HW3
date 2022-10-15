@@ -14,10 +14,7 @@ function EditSongModal()
 
     function confirmE ()
     {
-        let title = document.getElementById("edit-song-title").value;
-        let artist = document.getElementById("edit-song-artist").value;
-        let yID = document.getElementById("edit-song-ytid").value;
-        store.editSong(store.editSongId, title, artist, yID);
+        store.addEditSongTransaction();
         document.getElementById("edit-song-modal").classList.remove("is-visible");
     }
 

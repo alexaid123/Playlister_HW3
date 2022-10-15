@@ -33,8 +33,8 @@ function DeleteSongModal()
     function confirmD()
     {
         document.getElementById("delete-song-modal").classList.remove("is-visible");
-        console.log("GAMO " + store.deleteSongid);
-        store.deleteSong(store.deleteSongid);
+        store.addDeleteSongTransaction(store.deleteSongid);
+        //store.deleteSong(store.deleteSongid);
     }
         return (
             <div 

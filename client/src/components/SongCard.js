@@ -55,7 +55,8 @@ function SongCard(props) {
         store.handleMove(false, false);
 
         // ASK THE MODEL TO MOVE THE DATA
-        store.moveCallback(sourceId, targetId);
+        store.addMoveSongTransaction(sourceId, targetId);
+        //store.moveCallback(sourceId, targetId);
     }
 
 
