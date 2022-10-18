@@ -1,6 +1,8 @@
 import './App.css';
 import { React } from 'react'
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
+import { useContext } from 'react'
+import { GlobalStoreContext } from './store/index.js'
 import { Banner, ListSelector, PlaylistCards, DeleteListModal, DeleteSongModal, Statusbar, EditSongModal} from './components'
 /*
     This is our application's top-level component.
@@ -8,6 +10,8 @@ import { Banner, ListSelector, PlaylistCards, DeleteListModal, DeleteSongModal, 
     @author McKilla Gorilla
 */
 const App = () => {
+    const { store } = useContext(GlobalStoreContext);
+    
     return (
         <Router>
             <Banner />

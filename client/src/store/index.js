@@ -52,7 +52,8 @@ export const useGlobalStore = () => {
         editSongPrevTitle: null,
         editSongPrevArtist: null,
         editSongPrevYId: null,
-        editSongCur: null
+        editSongCur: null,
+        called: false
     });
 
     // HERE'S THE DATA STORE'S REDUCER, IT MUST
@@ -77,7 +78,8 @@ export const useGlobalStore = () => {
                     editSongPrevTitle: store.editSongPrevTitle,
                     editSongPrevArtist: store.editSongPrevArtist,
                     editSongPrevYId: store.editSongPrevYId,
-                    editSongCur: store.editSongCur
+                    editSongCur: store.editSongCur,
+                    called: store.called
                 });
             }
             // STOP EDITING THE CURRENT LIST
@@ -97,7 +99,8 @@ export const useGlobalStore = () => {
                     editSongPrevTitle: store.editSongPrevTitle,
                     editSongPrevArtist: store.editSongPrevArtist,
                     editSongPrevYId: store.editSongPrevYId,
-                    editSongCur: store.editSongCur
+                    editSongCur: store.editSongCur,
+                    called: store.called
                 })
             }
             // CREATE A NEW LIST
@@ -117,7 +120,8 @@ export const useGlobalStore = () => {
                     editSongPrevTitle: store.editSongPrevTitle,
                     editSongPrevArtist: store.editSongPrevArtist,
                     editSongPrevYId: store.editSongPrevYId,
-                    editSongCur: store.editSongCur
+                    editSongCur: store.editSongCur,
+                    called: store.called
                 })
             }
             // CREATE A NEW Song
@@ -137,7 +141,8 @@ export const useGlobalStore = () => {
                     editSongPrevTitle: store.editSongPrevTitle,
                     editSongPrevArtist: store.editSongPrevArtist,
                     editSongPrevYId: store.editSongPrevYId,
-                    editSongCur: store.editSongCur
+                    editSongCur: store.editSongCur,
+                    called: store.called
                 })
             }
             // GET ALL THE LISTS SO WE CAN PRESENT THEM
@@ -157,7 +162,8 @@ export const useGlobalStore = () => {
                     editSongPrevTitle: store.editSongPrevTitle,
                     editSongPrevArtist: store.editSongPrevArtist,
                     editSongPrevYId: store.editSongPrevYId,
-                    editSongCur: store.editSongCur
+                    editSongCur: store.editSongCur,
+                    called: store.called
                 });
             }
             // PREPARE TO DELETE A LIST
@@ -177,7 +183,8 @@ export const useGlobalStore = () => {
                     editSongPrevTitle: store.editSongPrevTitle,
                     editSongPrevArtist: store.editSongPrevArtist,
                     editSongPrevYId: store.editSongPrevYId,
-                    editSongCur: store.editSongCur
+                    editSongCur: store.editSongCur,
+                    called: store.called
                 });
             }
 
@@ -198,7 +205,8 @@ export const useGlobalStore = () => {
                     editSongPrevTitle: store.editSongPrevTitle,
                     editSongPrevArtist: store.editSongPrevArtist,
                     editSongPrevYId: store.editSongPrevYId,
-                    editSongCur: store.editSongCur
+                    editSongCur: store.editSongCur,
+                    called: store.called
                 });
             }
 
@@ -219,7 +227,8 @@ export const useGlobalStore = () => {
                     editSongPrevTitle: payload.titl,
                     editSongPrevArtist: payload.artis,
                     editSongPrevYId: payload.yI,
-                    editSongCur: payload.song
+                    editSongCur: payload.song,
+                    called: store.called
                 });
             }
 
@@ -236,7 +245,8 @@ export const useGlobalStore = () => {
                     listToDeleteId: store.listToDeleteId,
                     deleteSongName: store.deleteSongName,
                     deleteSongid: store.deleteSongid,
-                    editSongId: store.editSongId
+                    editSongId: store.editSongId,
+                    called: store.called
                 });
             }
             // START EDITING A LIST NAME
@@ -252,7 +262,8 @@ export const useGlobalStore = () => {
                     listToDeleteId: store.listToDeleteId,
                     deleteSongName: store.deleteSongName,
                     deleteSongid: store.deleteSongid,
-                    editSongId: store.editSongId
+                    editSongId: store.editSongId,
+                    called: store.called
                 });
             }
 
@@ -270,7 +281,8 @@ export const useGlobalStore = () => {
                     listToDeleteId: store.listToDeleteId,
                     deleteSongName: store.deleteSongName,
                     deleteSongid: store.deleteSongid,
-                    editSongId: store.editSongId
+                    editSongId: store.editSongId,
+                    called: store.called
                 });
             }
 
@@ -288,7 +300,27 @@ export const useGlobalStore = () => {
                     listToDeleteId: store.listToDeleteId,
                     deleteSongName: store.deleteSongName,
                     deleteSongid: store.deleteSongid,
-                    editSongId: store.editSongId
+                    editSongId: store.editSongId,
+                    called: store.called
+                });
+            }
+
+            // KEY HANDLERS
+            case GlobalStoreActionType.HANDLE_KEYHANDLERS: {
+                return setStore({
+                    idNamePairs: store.idNamePairs,
+                    currentList: store.currentList,
+                    newListCounter: store.newListCounter,
+                    listNameActive: store.currentList,
+                    listDeleteActive: store.currentList,
+                    isDragging: store.isDragging,
+                    draggedTo: store.draggedTo,
+                    listToDeleteName: store.listToDeleteName,
+                    listToDeleteId: store.listToDeleteId,
+                    deleteSongName: store.deleteSongName,
+                    deleteSongid: store.deleteSongid,
+                    editSongId: store.editSongId,
+                    called: true
                 });
             }
 
@@ -299,8 +331,38 @@ export const useGlobalStore = () => {
     // THESE ARE THE FUNCTIONS THAT WILL UPDATE OUR STORE AND
     // DRIVE THE STATE OF THE APPLICATION. WE'LL CALL THESE IN 
     // RESPONSE TO EVENTS INSIDE OUR COMPONENTS.
+    store.start = function()
+    {
+        let callUndo = () => {
+            store.undo();
+        };
+
+        let callRedo = () => {
+            store.redo();
+        };
+        if(!store.called)
+        {
+            document.addEventListener('keydown', function(event){
+                if((event.key === 'z' || event.key === 'Z') && event.ctrlKey)
+                {
+                    callUndo();
+                }
+                else if((event.key === 'y' || event.key === 'Y') && event.ctrlKey)
+                {
+                    callRedo();
+                }
+            } );
+            /*storeReducer({
+                type: GlobalStoreActionType.HANDLE_KEYHANDLERS,
+                payload:{}
+            });*/
+           // store.called = true;
+        }
+    }
+
 
     store.undo = function () {
+        console.log(tps.mostRecentTransaction, tps.hasTransactionToUndo());
         if (tps.hasTransactionToUndo()) {
             tps.undoTransaction();
             if(store.canUndo())
@@ -564,36 +626,24 @@ export const useGlobalStore = () => {
 
     store.createNewList = function () {
         async function asyncCreateNewList() {
-            const payload = { name: "Untitled"}
+            const payload = { name: "Untitled", songs: []};
             let response = await api.createPlaylist(payload);
             if (response.data.success)
             {
-                async function asyncGetPlaylistPairs()
-                {
-                    async function asyncGetPlaylistPairs()
-                    {
-                        let response = await api.getPlaylistPairs();
-                        if (response.data.success) {
                         let playlist = response.data.playlist;
-                        if (response.data.success) {
-                            storeReducer({
+                        storeReducer({
                                 type: GlobalStoreActionType.CREATE_NEW_LIST,
                                 payload: playlist
                             });
-                            store.loadIdNamePairs();
-                            let num = store.idNamePairs.length;
-                            store.newListCounter = num;
-                            store.setCurrentList(response.data.idNamePairs[store.newListCounter]._id);
-                        }
-                        }
-                    }
-                asyncGetPlaylistPairs();
-                   
-                }
-                
-                asyncGetPlaylistPairs();
+                        store.history.push('playlist/' + playlist._id)
+                        store.enableButton('add-song-button');
+                        store.enableButton('close-button');
+                        //store.start();
+                        //store.loadIdNamePairs();
+                        //let num = store.idNamePairs.length;
+                        //store.newListCounter = num;
+                       // store.setCurrentList(response.data.idNamePairs[store.newListCounter]._id);
             }
-            
         }
         asyncCreateNewList();
     }
@@ -801,6 +851,7 @@ export const useGlobalStore = () => {
                      let par = {list: playlist, change: false}
                     response = await api.updateSongsById(playlist._id, par);
                      if (response.data.success) {
+                        console.log(response.data.success);
                          async function getListPairs(playlist) {
                              response = await api.getPlaylistPairs();
                              if (response.data.success) {
@@ -838,6 +889,7 @@ export const useGlobalStore = () => {
             }
         }
         asyncSetCurrentList(id);
+        //store.start();
     }
 
     store.getPlaylistSize = function() {

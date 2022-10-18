@@ -13,6 +13,7 @@ const ListSelector = () => {
 
     useEffect(() => {
         store.loadIdNamePairs();
+        store.start();
     }, []);
 
     function handleCreateNewList() {
