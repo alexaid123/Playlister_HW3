@@ -352,11 +352,7 @@ export const useGlobalStore = () => {
                     callRedo();
                 }
             } );
-            /*storeReducer({
-                type: GlobalStoreActionType.HANDLE_KEYHANDLERS,
-                payload:{}
-            });*/
-           // store.called = true;
+            store.called = true;
         }
     }
 
